@@ -5,7 +5,6 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import CashierDashboard from "../pages/cashier/CashierDashboard";
 import AdminLayout from "../layouts/AdminLayout";
 import ProductsPage from "../pages/admin/products/ProductsPage";
-import CategoriesPage from "../pages/admin/CategoriesPage";
 import CashiersPage from "../pages/admin/cashier/CashierPage";
 import ReportsPage from "../pages/admin/reports/ReportsPage";
 import ProtectedRoute from "./ProtectedRoute";
