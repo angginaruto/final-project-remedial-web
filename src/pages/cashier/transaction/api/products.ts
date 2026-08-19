@@ -1,6 +1,6 @@
 import type { Product } from "../types";
 
-const BASE_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function getToken() {
   return localStorage.getItem("token");
@@ -16,7 +16,7 @@ export async function fetchProducts(search: string): Promise<{ data: Product[] }
     params.append("search", search);
   }
 
-  const response = await fetch(`${BASE_URL}/products?${params.toString()}`, {
+  const response = await fetch(`${API_URL}/api/products?${params.toString()}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 

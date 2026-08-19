@@ -20,7 +20,8 @@ export default function CashierDashboard() {
   const [initialCash, setInitialCash] = useState("");
   const [showEndShiftForm, setShowEndShiftForm] = useState(false);
   const [finalCash, setFinalCash] = useState("");
-
+  const API_URL = import.meta.env.VITE_API_URL;
+  
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -31,7 +32,7 @@ export default function CashierDashboard() {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/shift/current", {
+      const response = await fetch(`${API_URL}/api/shift/current`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +70,7 @@ export default function CashierDashboard() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/shift/start", {
+      const response = await fetch(`${API_URL}/api/shift/start`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +107,7 @@ export default function CashierDashboard() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/shift/end", {
+      const response = await fetch(`${API_URL}/api/shift/end`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

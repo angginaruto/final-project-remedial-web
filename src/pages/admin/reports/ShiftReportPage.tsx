@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./ShiftReportPage.css";
 
 type ShiftReport = {
-  id: number;
+  shiftId: number;
   cashierId: number;
   cashier: {
     id: number;
@@ -28,6 +28,7 @@ export default function ShiftReportPage() {
   const [shifts, setShifts] = useState<ShiftReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchShiftReport = async () => {
     try {
@@ -42,7 +43,7 @@ export default function ShiftReportPage() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/reports/shifts?${params.toString()}`,
+        `${API_URL}/api/reports/shifts?${params.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,7 +106,6 @@ export default function ShiftReportPage() {
   const openCount = shifts.filter((s) => s.status.toUpperCase() === "OPEN").length;
   const shortCount = shifts.filter((s) => getDifferenceLabel(s.cashDifference) === "SHORT").length;
   const totalTransactions = shifts.reduce((sum, s) => sum + (s.totalTransactions ?? 0), 0);
-
   return (
     <div className="srp">
       <header className="srp-header">
@@ -188,7 +188,7 @@ export default function ShiftReportPage() {
                 const diffValue = Number(shift.cashDifference ?? 0);
 
                 return (
-                  <tr key={shift.id}>
+                  <tr key={shift.shiftId}>
                     <td className="srp-cell--name">{shift.cashier.name}</td>
 
                     <td className="srp-cell--mono srp-cell--muted">

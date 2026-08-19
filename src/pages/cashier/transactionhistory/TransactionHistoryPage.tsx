@@ -26,11 +26,11 @@ type Transaction = {
 };
 
 export default function TransactionHistoryPage() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchTransactions = async () => {
     try {
@@ -39,7 +39,7 @@ export default function TransactionHistoryPage() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:5000/api/transaction?page=1&limit=20",
+        `${API_URL}/api/transaction?page=1&limit=20`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

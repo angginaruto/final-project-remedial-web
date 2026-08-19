@@ -12,6 +12,7 @@ type DailySales = {
 export default function DailySalesReportPage() {
   const [reports, setReports] = useState<DailySales[]>([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -33,7 +34,7 @@ export default function DailySalesReportPage() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/reports/daily?${params.toString()}`,
+        `${API_URL}/api/reports/daily?${params.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

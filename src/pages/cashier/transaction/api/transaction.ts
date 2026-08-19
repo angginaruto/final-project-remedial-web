@@ -1,6 +1,6 @@
 import type { CartItem, PreviewItem, TransactionPreview } from "../types";
 
-const BASE_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function getToken() {
   return localStorage.getItem("token");
@@ -19,7 +19,7 @@ async function parseOrThrow(response: Response) {
 export async function previewTransaction(
   cart: CartItem[],
 ): Promise<{ data: TransactionPreview }> {
-  const response = await fetch(`${BASE_URL}/transaction/preview`, {
+  const response = await fetch(`${API_URL}/transaction/preview`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export async function payCash(
   items: PreviewItem[],
   cashReceived: number,
 ): Promise<{ data: { changeAmount: number } }> {
-  const response = await fetch(`${BASE_URL}/transaction/cash`, {
+  const response = await fetch(`${API_URL}/transaction/cash`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export async function payCash(
 }
 
 export async function payDebit(items: PreviewItem[], cardNumber: string) {
-  const response = await fetch(`${BASE_URL}/transaction/debit`, {
+  const response = await fetch(`${API_URL}/api/transaction/debit`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

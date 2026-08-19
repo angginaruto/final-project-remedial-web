@@ -1,6 +1,6 @@
 import type { Cashier, CashierFormValues, Pagination } from "../types";
 
-const BASE_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function getToken() {
   return localStorage.getItem("token");
@@ -30,7 +30,7 @@ export async function fetchCashiers(params: {
     query.append("search", params.search);
   }
 
-  const response = await fetch(`${BASE_URL}/cashier?${query.toString()}`, {
+  const response = await fetch(`${API_URL}/api/cashier?${query.toString()}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 
@@ -38,7 +38,7 @@ export async function fetchCashiers(params: {
 }
 
 export async function createCashier(values: CashierFormValues) {
-  const response = await fetch(`${BASE_URL}/cashier`, {
+  const response = await fetch(`${API_URL}/api/cashier`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export async function updateCashier(id: number, values: CashierFormValues) {
     body.password = values.password;
   }
 
-  const response = await fetch(`${BASE_URL}/cashier/${id}`, {
+  const response = await fetch(`${API_URL}/api/cashier/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export async function updateCashier(id: number, values: CashierFormValues) {
 }
 
 export async function deleteCashier(id: number) {
-  const response = await fetch(`${BASE_URL}/cashier/${id}`, {
+  const response = await fetch(`${API_URL}/api/cashier/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${getToken()}`,

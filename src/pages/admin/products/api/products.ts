@@ -1,6 +1,6 @@
 import type { Category, Pagination, Product, ProductFormValues } from "../types";
 
-const BASE_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function getToken() {
   return localStorage.getItem("token");
@@ -50,7 +50,7 @@ export async function fetchProducts(params: {
     query.append("categoryId", params.categoryId);
   }
 
-  const response = await fetch(`${BASE_URL}/products?${query.toString()}`, {
+  const response = await fetch(`${API_URL}/api/products?${query.toString()}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 
@@ -58,7 +58,7 @@ export async function fetchProducts(params: {
 }
 
 export async function fetchCategories(): Promise<{ data: Category[] }> {
-  const response = await fetch(`${BASE_URL}/category`, {
+  const response = await fetch(`${API_URL}/api/category`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 
@@ -66,7 +66,7 @@ export async function fetchCategories(): Promise<{ data: Category[] }> {
 }
 
 export async function createProduct(values: ProductFormValues, image?: File | null) {
-  const response = await fetch(`${BASE_URL}/products`, {
+  const response = await fetch(`${API_URL}/api/products`, {
     method: "POST",
     headers: { Authorization: `Bearer ${getToken()}` },
     body: buildFormData(values, image),
@@ -80,7 +80,7 @@ export async function updateProduct(
   values: ProductFormValues,
   image?: File | null,
 ) {
-  const response = await fetch(`${BASE_URL}/products/${id}`, {
+  const response = await fetch(`${API_URL}/api/products/${id}`, {
     method: "PATCH",
     headers: { Authorization: `Bearer ${getToken()}` },
     body: buildFormData(values, image),
@@ -89,7 +89,7 @@ export async function updateProduct(
   return parseOrThrow(response);
 }
 export async function deleteProduct(id: number) {
-  const response = await fetch(`${BASE_URL}/products/${id}`, {
+  const response = await fetch(`${API_URL}/api/products/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${getToken()}`,
