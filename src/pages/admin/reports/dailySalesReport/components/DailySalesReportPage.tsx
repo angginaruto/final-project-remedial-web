@@ -1,88 +1,28 @@
-import { useEffect, useState } from "react";
+import { useDailySalesReport } from "../hooks/useDailySalesReport";
 import "./DailySalesReportPage.css";
-
-type DailySales = {
-  date: string;
-  totalTransactions: number;
-  totalSales: number;
-  totalCash: number;
-  totalDebit: number;
-};
+import { useNavigate } from "react-router-dom";
 
 export default function DailySalesReportPage() {
-  const [reports, setReports] = useState<DailySales[]>([]);
-  const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-
-  const fetchDailyReport = async () => {
-    try {
-      setLoading(true);
-
-      const token = localStorage.getItem("token");
-
-      const params = new URLSearchParams();
-
-      if (startDate) {
-        params.append("startDate", startDate);
-      }
-
-      if (endDate) {
-        params.append("endDate", endDate);
-      }
-
-      const response = await fetch(
-        `${API_URL}/api/reports/daily?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-
-      setReports(result.data);
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Gagal mengambil daily sales report",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDailyReport();
-  }, []);
-
-  const resetFilter = () => {
-    setStartDate("");
-    setEndDate("");
-
-    setTimeout(() => {
-      fetchDailyReport();
-    }, 0);
-  };
-
-  const totalTransactions = reports.reduce((sum, r) => sum + r.totalTransactions, 0);
-  const totalSales = reports.reduce((sum, r) => sum + r.totalSales, 0);
-  const totalCash = reports.reduce((sum, r) => sum + r.totalCash, 0);
-  const totalDebit = reports.reduce((sum, r) => sum + r.totalDebit, 0);
-  const cashShare = totalCash + totalDebit > 0 ? (totalCash / (totalCash + totalDebit)) * 100 : 50;
+  const navigate = useNavigate()
+  const {
+    reports,
+    loading,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    fetchReports,
+    resetFilter,
+    totalTransactions,
+    totalSales,
+    totalCash,
+    totalDebit,
+    cashShare,
+  } = useDailySalesReport();
 
   return (
     <div className="dsr">
+      <button className="dsr-btn dsr-btn--ghost margin-bottom: 20px; " onClick={() => navigate("/admin/reports") }>Back</button>
       <header className="dsr-header">
         <h1 className="dsr-title">Daily Sales Report</h1>
       </header>
@@ -107,7 +47,7 @@ export default function DailySalesReportPage() {
         </div>
 
         <div className="dsr-filter-actions">
-          <button className="dsr-btn dsr-btn--primary" onClick={fetchDailyReport}>
+          <button className="dsr-btn dsr-btn--primary" onClick={() => fetchReports()}>
             Filter
           </button>
           <button className="dsr-btn dsr-btn--ghost" onClick={resetFilter}>
@@ -140,10 +80,7 @@ export default function DailySalesReportPage() {
               <span>Debit · Rp {totalDebit.toLocaleString("id-ID")}</span>
             </div>
             <div className="dsr-split-bar">
-              <div
-                className="dsr-split-bar-cash"
-                style={{ width: `${cashShare}%` }}
-              />
+              <div className="dsr-split-bar-cash" style={{ width: `${cashShare}%` }} />
             </div>
           </div>
         </div>

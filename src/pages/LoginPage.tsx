@@ -6,6 +6,8 @@ import "./LoginPage.css";
 export default function LoginPage() {
   const navigate = useNavigate();
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,6 +25,11 @@ export default function LoginPage() {
       });
 
       const { token, user } = response.data.data;
+      
+      if (!EMAIL_REGEX.test(email)) {
+        setError("Format email tidak valid");
+      return;
+      }
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
@@ -55,6 +62,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="lg-input"
+              maxLength={20}
             />
           </label>
 

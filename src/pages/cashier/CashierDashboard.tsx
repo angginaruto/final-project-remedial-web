@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./CashierDashboard.css";
 
 type Shift = {
-  id: number;
-  cashierId: number;
+  id: number; cashierId: number;
   initialCash: number;
   finalCash: number | null;
   expectedCash: number | null;
@@ -164,6 +163,7 @@ export default function CashierDashboard() {
             <label>Uang Awal</label>
             <input
               type="number"
+              step={10000}
               value={initialCash}
               onChange={(e) => setInitialCash(e.target.value)}
               placeholder="Masukkan uang awal"

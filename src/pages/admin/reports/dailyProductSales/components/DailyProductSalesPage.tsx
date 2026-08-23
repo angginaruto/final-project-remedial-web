@@ -1,85 +1,25 @@
-import { useEffect, useState } from "react";
+import { useDailyProductSales } from "../hooks/useDailyProductSales";
 import "./DailyProductSalesPage.css";
-
-type DailyProductSales = {
-  date: string;
-  productId: number;
-  productName: string;
-  quantitySold: number;
-  totalSales: number;
-};
+import { useNavigate } from "react-router-dom";
 
 export default function DailyProductSalesPage() {
-  const [reports, setReports] = useState<DailyProductSales[]>([]);
-  const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-
-  const fetchDailyProductSales = async () => {
-    try {
-      setLoading(true);
-
-      const token = localStorage.getItem("token");
-
-      const params = new URLSearchParams();
-
-      if (startDate) {
-        params.append("startDate", startDate);
-      }
-
-      if (endDate) {
-        params.append("endDate", endDate);
-      }
-
-      const response = await fetch(
-        `${API_URL}/api/reports/products?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-
-      setReports(result.data);
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Gagal mengambil daily product sales report",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDailyProductSales();
-  }, []);
-
-  const resetFilter = () => {
-    setStartDate("");
-    setEndDate("");
-
-    setTimeout(() => {
-      fetchDailyProductSales();
-    }, 0);
-  };
-
-  const totalQuantity = reports.reduce((sum, r) => sum + r.quantitySold, 0);
-  const totalSales = reports.reduce((sum, r) => sum + r.totalSales, 0);
+  const navigate = useNavigate()
+  const {
+    reports,
+    loading,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    fetchReports,
+    resetFilter,
+    totalQuantity,
+    totalSales,
+  } = useDailyProductSales();
 
   return (
     <div className="dps">
+      <button className="dsr-btn dsr-btn--ghost margin-bottom: 20px; " onClick={() => navigate("/admin/reports") }>Back</button>
       <header className="dps-header">
         <h1 className="dps-title">Daily Product Sales</h1>
       </header>
@@ -104,7 +44,7 @@ export default function DailyProductSalesPage() {
         </div>
 
         <div className="dps-filter-actions">
-          <button className="dps-btn dps-btn--primary" onClick={fetchDailyProductSales}>
+          <button className="dps-btn dps-btn--primary" onClick={() => fetchReports()}>
             Filter
           </button>
           <button className="dps-btn dps-btn--ghost" onClick={resetFilter}>
@@ -153,11 +93,8 @@ export default function DailyProductSalesPage() {
                   <td className="dps-cell--mono dps-cell--date">
                     {new Date(`${report.date}T00:00:00`).toLocaleDateString("id-ID")}
                   </td>
-
                   <td className="dps-cell--name">{report.productName}</td>
-
                   <td className="dps-cell--mono">{report.quantitySold}</td>
-
                   <td className="dps-cell--mono dps-cell--sales">
                     Rp {report.totalSales.toLocaleString("id-ID")}
                   </td>

@@ -8,9 +8,9 @@ import ProductsPage from "../pages/admin/products/ProductsPage";
 import CashiersPage from "../pages/admin/cashier/CashierPage";
 import ReportsPage from "../pages/admin/reports/ReportsPage";
 import ProtectedRoute from "./ProtectedRoute";
-import ShiftReportPage from "../pages/admin/reports/ShiftReportPage";
-import DailyProductSalesPage from "../pages/admin/reports/DailyProductSalesPage";
-import DailySalesReportPage from "../pages/admin/reports/DailySalesReportPage";
+import ShiftReportPage from "../pages/admin/reports/shiftReport/components/ShiftReportPage";
+import DailyProductSalesPage from "../pages/admin/reports/dailyProductSales/components/DailyProductSalesPage";
+import DailySalesReportPage from "../pages/admin/reports/dailySalesReport/components/DailySalesReportPage";
 import TransactionPage from "../pages/cashier/transaction/TransactionPage";
 import TransactionHistoryPage from "../pages/cashier/transactionhistory/TransactionHistoryPage";
 

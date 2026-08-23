@@ -1,113 +1,25 @@
-import { useEffect, useState } from "react";
+import { useShiftReport } from "../hooks/useShiftReport";
+import { getDifferenceLabel, formatDateTime } from "../utils/shiftReport.utils";
 import "./ShiftReportPage.css";
-
-type ShiftReport = {
-  shiftId: number;
-  cashierId: number;
-  cashier: {
-    id: number;
-    name: string;
-    email: string;
-  };
-
-  startedAt: string;
-  endedAt: string | null;
-
-  initialCash: number;
-  finalCash: number | null;
-  expectedCash: number | null;
-  cashDifference: number | null;
-
-  status: string;
-
-  totalTransactions?: number;
-  totalDebit?: number;
-};
+import { useNavigate } from "react-router-dom";
 
 export default function ShiftReportPage() {
-  const [shifts, setShifts] = useState<ShiftReport[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [date, setDate] = useState("");
-  const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate()
+  const {
+    shifts,
+    loading,
+    date,
+    setDate,
+    fetchShifts,
+    resetFilter,
+    openCount,
+    shortCount,
+    totalTransactions,
+  } = useShiftReport();
 
-  const fetchShiftReport = async () => {
-    try {
-      setLoading(true);
-
-      const token = localStorage.getItem("token");
-
-      const params = new URLSearchParams();
-
-      if (date) {
-        params.append("date", date);
-      }
-
-      const response = await fetch(
-        `${API_URL}/api/reports/shifts?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-
-      setShifts(result.data);
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        error instanceof Error ? error.message : "Gagal mengambil shift report",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getDifferenceLabel = (cashDifference: number | null) => {
-    const difference = Number(cashDifference ?? 0);
-
-    if (difference === 0) {
-      return "MATCH";
-    }
-
-    return difference > 0 ? "OVER" : "SHORT";
-  };
-
-  const formatDateTime = (date: string | null) => {
-    if (!date) return "-";
-
-    return new Date(date).toLocaleString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const resetFilter = () => {
-    setDate("");
-
-    setTimeout(() => {
-      fetchShiftReport();
-    }, 0);
-  };
-
-  useEffect(() => {
-    fetchShiftReport();
-  }, []);
-
-  const openCount = shifts.filter((s) => s.status.toUpperCase() === "OPEN").length;
-  const shortCount = shifts.filter((s) => getDifferenceLabel(s.cashDifference) === "SHORT").length;
-  const totalTransactions = shifts.reduce((sum, s) => sum + (s.totalTransactions ?? 0), 0);
   return (
     <div className="srp">
+    <button className="srp-btn srp-btn--ghost margin-bottom: 20px; " onClick={() => navigate("/admin/reports") }>Back</button>
       <header className="srp-header">
         <h1 className="srp-title">Shift Report</h1>
       </header>
@@ -123,7 +35,7 @@ export default function ShiftReportPage() {
         </div>
 
         <div className="srp-filter-actions">
-          <button className="srp-btn srp-btn--primary" onClick={fetchShiftReport}>
+          <button className="srp-btn srp-btn--primary" onClick={() => fetchShifts()}>
             Filter
           </button>
           <button className="srp-btn srp-btn--ghost" onClick={resetFilter}>
