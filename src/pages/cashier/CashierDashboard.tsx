@@ -163,7 +163,7 @@ export default function CashierDashboard() {
             <label>Uang Awal</label>
             <input
               type="number"
-              step={10000}
+              step={1000}
               value={initialCash}
               onChange={(e) => setInitialCash(e.target.value)}
               placeholder="Masukkan uang awal"
@@ -232,6 +232,7 @@ export default function CashierDashboard() {
             <div className="cd-modal-backdrop">
               <div className="cd-modal">
                 <h3 className="cd-modal-title">Akhiri Shift</h3>
+                {/* <p className="cd-card-hint">Uang awal nilainya sebagai berikut : {Number(shift.initialCash).toLocaleString("id-ID")}</p> */}
                 <p className="cd-card-hint">
                   Hitung ulang uang fisik di laci kasir sebelum konfirmasi.
                 </p>
@@ -243,6 +244,7 @@ export default function CashierDashboard() {
                     value={finalCash}
                     onChange={(e) => setFinalCash(e.target.value)}
                     placeholder="Masukkan uang akhir di laci kasir"
+                    step={1000}
                   />
                 </div>
 

@@ -68,6 +68,7 @@ export function ProductForm({
             value={values.price}
             disabled={isSubmitting}
             onChange={(e) => updateField("price", e.target.value)}
+            step={1000}
           />
         </div>
 

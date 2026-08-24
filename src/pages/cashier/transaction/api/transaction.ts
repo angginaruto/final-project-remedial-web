@@ -19,7 +19,7 @@ async function parseOrThrow(response: Response) {
 export async function previewTransaction(
   cart: CartItem[],
 ): Promise<{ data: TransactionPreview }> {
-  const response = await fetch(`${API_URL}/transaction/preview`, {
+  const response = await fetch(`${API_URL}/api/transaction/preview`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export async function payCash(
   items: PreviewItem[],
   cashReceived: number,
 ): Promise<{ data: { changeAmount: number } }> {
-  const response = await fetch(`${API_URL}/transaction/cash`, {
+  const response = await fetch(`${API_URL}/api/transaction/cash`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
